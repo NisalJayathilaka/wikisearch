@@ -3,8 +3,8 @@ import SwiftyJSON
 import Alamofire
 import SafariServices
 
- class SearchResultsTableViewController: UITableViewController {
-   
+class SearchResultsTableViewController: UITableViewController {
+    
     private var searchResults = [JSON]() {
         didSet {
             tableView.reloadData()
@@ -49,6 +49,9 @@ import SafariServices
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return searchResults.count
     }
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 250
+    }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell",
@@ -56,9 +59,11 @@ import SafariServices
         
         cell.titleLabel.text = searchResults[indexPath.row]["title"].stringValue
         
-        cell.descriptionLabel.text = searchResults[indexPath.row]["terms"]["description"][0].string
+        cell.descriptionLabel.text = "gggggg"
+        
         
         if let url = searchResults[indexPath.row]["thumbnail"]["source"].string {
+            
             apiFetcher.fetchImage(url: url, completionHandler: { image, _ in
                 cell.wikiImageView.image = image
             })
@@ -95,7 +100,6 @@ extension SearchResultsTableViewController: UISearchBarDelegate {
     }
     
     func fetchResults(for text: String) {
-        print("Text Searched: \(text)")
         apiFetcher.search(searchText: text, completionHandler: {
             [weak self] results, error in
             if case .failure = error {
